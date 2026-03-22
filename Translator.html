@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Solamorph Translator</title>
+</head>
+<body>
+
+<h2>Caputformain Translator</h2>
+
+<textarea id="input" rows="6" cols="50" placeholder="Type here..."></textarea>
+<br><br>
+
+<button onclick="run()">Translate</button>
+
+<p id="output"></p>
+
+<script>
+const translator = {
+  "i": "Ani",
+    "eat": "munz",
+    "apple": "sena",
+    "you": "teka",
+    "hello": "berakhet",
+    "yes": "ya'e",
+    "no": "nehk",
+    "goodbye": "berakhete",
+    "am": "esu",
+    "mother": "Emira",
+    "father": "Abvaren",
+    "brother": "Brakhun",
+    "sister": "Achvela",
+    "a": "es",
+    "my": "ani'at",
+    "name": "canne",
+    "is": "esuv",
+    "and": "ven",
+    "was": "kenet",
+    "were": "esnet",
+    "be": "esi",
+    "been": "esenar",
+    "have": "havet",
+    "has": "hahj",
+    "had": "haver",
+    "because": "zihar",
+    "but": "enar",
+    "he": "hakar",
+    "him": "hakor",
+    "his": "hakat",
+    "she": "sila",
+    "her": "silor",
+    "hers": "silat",
+    "himself": "hakavem",
+    "herself": "silavem",
+    "they": "dekan",
+    "them": "dekor",
+    "thiers": "dekat",
+    "themself": "dekavem",
+    "help": "azerra",
+    "hate": "haten",
+    "not": "net",
+    "faggot": "zeebert",
+    "the": "der",
+    "saw": "vis",
+    "seen": "vis",
+    "see": "visrekh",
+    "wolf": "lopon",
+    "all": "torak",
+    "dance": "tanzen",
+    "one": "nu",
+    "two": "out",
+    "three": "tru",
+    "four": "quat",
+    "five": "tanu",
+    "six": "zef",
+    "seven": "zeffen",
+    "eight": "ach",
+    "nine": "neven",
+    "ten": "ba",
+};
+
+const suffixes = {
+    "ing": "ten",
+    "ed": "et",
+    "s": "ar",
+    "'s": "at",
+    "self": "vem",
+
+};
+
+const exceptions = {
+    "is": "esuv"
+};
+
+function translateWord(word) {
+    let prefix = "";
+    let suffixPunct = "";
+
+    while (word.length > 0 && /[^\w']/.test(word[0])) {
+        prefix += word[0];
+        word = word.slice(1);
+    }
+
+    while (word.length > 0 && /[^\w']/.test(word[word.length - 1])) {
+        suffixPunct = word[word.length - 1] + suffixPunct;
+        word = word.slice(0, -1);
+    }
+
+    let lower = word.toLowerCase();
+    let translated = null;
+
+    if (exceptions[lower]) {
+        translated = exceptions[lower];
+    } else {
+        for (let suffix in suffixes) {
+            if (lower.endsWith(suffix)) {
+                let base = lower.slice(0, -suffix.length);
+                if (translator[base]) {
+                    translated = translator[base] + suffixes[suffix];
+                    break;
+                }
+            }
+        }
+
+        if (!translated) {
+            if (translator[lower]) {
+                translated = translator[lower];
+            } else {
+                translated = word;
+            }
+        }
+    }
+
+    return prefix + translated + suffixPunct;
+}
+
+function translateSentence(sentence) {
+    let words = sentence.split(" ");
+    return words.map(w => translateWord(w)).join(" ");
+}
+
+function run() {
+    let input = document.getElementById("input").value;
+    document.getElementById("output").innerText = translateSentence(input);
+}
+</script>
+
+</body>
+</html>
